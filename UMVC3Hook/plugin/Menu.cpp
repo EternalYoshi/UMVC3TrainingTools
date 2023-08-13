@@ -77,6 +77,7 @@ bool P2Char1Slow = false;
 bool P2Char2Slow = false;
 bool P2Char3Slow = false;
 bool DarkPhoenix = false;
+bool Turnabout = false;
 
 int GameMode;
 
@@ -275,6 +276,41 @@ FighterInstall DarkPhoenixInstall =
 	-0
 };
 
+FighterInstall TurnaboutMode =
+{
+	1084673544,//IdentifyingHashA
+	1,//IdentifyingHashA
+	17,//InstallID
+	10,//mType
+	999999.0,//Duration
+	188,//PossibleRelatedAnmchrEntry
+	0,
+	0,
+	0,//mLifeAdd
+	0,
+	0,
+	0,
+	1.0,
+	1.0,
+	1.0,
+	1.0,
+	1.0,
+	1.2,
+	-1.0,
+	-1,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	-1,
+	-0
+};
 
 enum WrightEvidence
 {
@@ -1012,11 +1048,13 @@ void PopTheBird()
 			*((FighterInstall*)(P1C1 + 0x15F0)) = DarkPhoenixInstall;
 			//For The Portrait.
 			*((int*)(P1C1 + 0x6930)) = 1;
+			*((int*)(P1C1 + 0x1548)) = 1;
 		}
 		else
 		{
 			*((FighterInstall*)(P1C1 + 0x15F0)) = EmptyInstall;
 			*((int*)(P1C1 + 0x6930)) = 0;
+			*((int*)(P1C1 + 0x1548)) = 0;
 		}
 
 
@@ -1028,11 +1066,14 @@ void PopTheBird()
 			*((FighterInstall*)(P1C2 + 0x15F0)) = DarkPhoenixInstall;
 			//For The Portrait.
 			*((int*)(P1C2 + 0x6930)) = 1;
+			*((int*)(P1C2 + 0x1548)) = 1;
 		}
 		else
 		{
 			*((FighterInstall*)(P1C2 + 0x15F0)) = EmptyInstall;
 			*((int*)(P1C2 + 0x6930)) = 0;
+			*((int*)(P1C2 + 0x1548)) = 0;
+
 		}
 	}
 	if (P1Character3ID == 36)
@@ -1042,11 +1083,13 @@ void PopTheBird()
 			*((FighterInstall*)(P1C3 + 0x15F0)) = DarkPhoenixInstall;
 			//For The Portrait.
 			*((int*)(P1C3 + 0x6930)) = 1;
+			*((int*)(P1C3 + 0x1548)) = 1;
 		}
 		else
 		{
 			*((FighterInstall*)(P1C3 + 0x15F0)) = EmptyInstall;
 			*((int*)(P1C3 + 0x6930)) = 0;
+			*((int*)(P1C3 + 0x1548)) = 0;
 		}
 	}
 	if (P2Character1ID == 36)
@@ -1056,11 +1099,13 @@ void PopTheBird()
 			*((FighterInstall*)(P2C1 + 0x15F0)) = DarkPhoenixInstall;
 			//For The Portrait.
 			*((int*)(P2C1 + 0x6930)) = 1;
+			*((int*)(P2C1 + 0x1548)) = 1;
 		}
 		else
 		{
 			*((FighterInstall*)(P2C1 + 0x15F0)) = EmptyInstall;
 			*((int*)(P2C1 + 0x6930)) = 0;
+			*((int*)(P2C1 + 0x1548)) = 0;
 		}
 	}
 	if (P2Character2ID == 36)
@@ -1070,11 +1115,13 @@ void PopTheBird()
 			*((FighterInstall*)(P2C2 + 0x15F0)) = DarkPhoenixInstall;
 			//For The Portrait.
 			*((int*)(P2C2 + 0x6930)) = 1;
+			*((int*)(P2C2 + 0x1548)) = 1;
 		}
 		else
 		{
 			*((FighterInstall*)(P2C2 + 0x15F0)) = EmptyInstall;
 			*((int*)(P2C2 + 0x6930)) = 0;
+			*((int*)(P2C2 + 0x1548)) = 0;
 		}
 	}
 	if (P2Character3ID == 36)
@@ -1084,15 +1131,119 @@ void PopTheBird()
 			*((FighterInstall*)(P2C3 + 0x15F0)) = DarkPhoenixInstall;
 			//For The Portrait.
 			*((int*)(P2C3 + 0x6930)) = 1;
+			*((int*)(P2C3 + 0x1548)) = 1;
 		}
 		else
 		{
 			*((FighterInstall*)(P2C3 + 0x15F0)) = EmptyInstall;
 			*((int*)(P2C3 + 0x6930)) = 0;
+			*((int*)(P2C3 + 0x1548)) = 0;
 		}
 	}
 
 
+
+}
+
+void Objection()
+{
+	
+	//Gets the needed values in memory. First these pointers.
+	uintptr_t mysterytable = *(uintptr_t*)_addr(0x140d533e0);
+	uintptr_t ptable = *(uintptr_t*)_addr(0x140d50e58);
+
+	uintptr_t P1C1 = *(uintptr_t*)_addr(mysterytable + 0xAA0);
+	uintptr_t P1C2 = *(uintptr_t*)_addr((mysterytable + 0xAA0) + (0x438 * 1));
+	uintptr_t P1C3 = *(uintptr_t*)_addr((mysterytable + 0xAA0) + (0x438 * 2));
+	uintptr_t P2C1 = *(uintptr_t*)_addr((mysterytable + 0xAA0) + (0x438 * 3));
+	uintptr_t P2C2 = *(uintptr_t*)_addr((mysterytable + 0xAA0) + (0x438 * 4));
+	uintptr_t P2C3 = *(uintptr_t*)_addr((mysterytable + 0xAA0) + (0x438 * 5));
+
+	int P1Character1ID = *(uintptr_t*)_addr((ptable + 0x44));
+	int P1Character2ID = *(uintptr_t*)_addr((ptable + 0x44 + 0x58));
+	int P1Character3ID = *(uintptr_t*)_addr((ptable + 0x44 + 0x58 + 0x58));
+	int P2Character1ID = *(uintptr_t*)_addr((ptable + 0x44 + 0x58 + 0x58 + 0x58));
+	int P2Character2ID = *(uintptr_t*)_addr((ptable + 0x44 + 0x58 + 0x58 + 0x58 + 0x58));
+	int P2Character3ID = *(uintptr_t*)_addr((ptable + 0x44 + 0x58 + 0x58 + 0x58 + 0x58 + 0x58));
+
+	if (P1Character1ID == 23)
+	{
+		if (Turnabout == true)
+		{
+			*((FighterInstall*)(P1C1 + 0x15F0)) = TurnaboutMode;
+			*((int*)(P1C1 + 0x1548)) = 2;
+		}
+		else
+		{
+			*((FighterInstall*)(P1C1 + 0x15F0)) = EmptyInstall;
+			*((int*)(P1C1 + 0x1548)) = 0;
+		}
+	}
+	if (P1Character2ID == 23)
+	{
+		if (Turnabout == true)
+		{
+			*((FighterInstall*)(P1C2 + 0x15F0)) = TurnaboutMode;
+			*((int*)(P1C2 + 0x1548)) = 2;
+		}
+		else
+		{
+			*((FighterInstall*)(P1C2 + 0x15F0)) = EmptyInstall;
+			*((int*)(P1C2 + 0x1548)) = 0;
+		}
+	}
+	if (P1Character3ID == 23)
+	{
+		if (Turnabout == true)
+		{
+			*((FighterInstall*)(P1C3 + 0x15F0)) = TurnaboutMode;
+			*((int*)(P1C3 + 0x1548)) = 2;
+		}
+		else
+		{
+			*((FighterInstall*)(P1C3 + 0x15F0)) = EmptyInstall;
+			*((int*)(P1C3 + 0x1548)) = 0;
+		}
+	}
+	if (P2Character1ID == 23)
+	{
+		if (Turnabout == true)
+		{
+			*((FighterInstall*)(P2C1 + 0x15F0)) = TurnaboutMode;
+			*((int*)(P2C1 + 0x1548)) = 2;
+		}
+		else
+		{
+			*((FighterInstall*)(P2C1 + 0x15F0)) = EmptyInstall;
+			*((int*)(P2C1 + 0x1548)) = 0;
+		}
+	}
+	if (P2Character2ID == 23)
+	{
+		if (Turnabout == true)
+		{
+			*((FighterInstall*)(P2C2 + 0x15F0)) = TurnaboutMode;
+			*((int*)(P2C2 + 0x1548)) = 2;
+		}
+		else
+		{
+			*((FighterInstall*)(P2C2 + 0x15F0)) = EmptyInstall;
+			*((int*)(P2C2 + 0x1548)) = 0;
+		}
+	}
+	if (P2Character3ID == 23)
+	{
+		if (Turnabout == true)
+		{
+			*((FighterInstall*)(P2C3 + 0x15F0)) = TurnaboutMode;
+			*((int*)(P2C3 + 0x1548)) = 2;
+		}
+		else
+		{
+			*((FighterInstall*)(P2C3 + 0x15F0)) = EmptyInstall;
+			*((int*)(P2C3 + 0x1548)) = 0;
+		}
+	}
 
 }
 
@@ -1675,6 +1826,16 @@ void UMVC3Menu::Draw()
 				if (CheckTheMode() == true)
 				{
 					PopTheBird();
+				}
+			}
+
+			ImGui::Separator();
+			ImGui::Text("Turnabout Toggle");
+			if (ImGui::Checkbox("TurnaboutToggle", &Turnabout))
+			{
+				if (CheckTheMode() == true)
+				{
+					Objection();
 				}
 			}
 
