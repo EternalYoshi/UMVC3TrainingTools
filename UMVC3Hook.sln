@@ -1,9 +1,23 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.960
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UMVC3Hook", "UMVC3Hook\UMVC3Hook.vcxproj", "{8539F2F2-70DC-453A-9A80-1D41AE524A59}"
+EndProject
+Project("{911E67C6-3D85-4FCE-B560-20A9C3E3FF48}") = "umvc3", "E:\ULTIMATE MARVEL VS. CAPCOM 3\umvc3.exe", "{5A3A0A95-D1AE-4F66-BCD4-2329DCBAF40B}"
+	ProjectSection(DebuggerProjectSystem) = preProject
+		PortSupplier = 00000000-0000-0000-0000-000000000000
+		Executable = E:\ULTIMATE MARVEL VS. CAPCOM 3\umvc3.exe
+		RemoteMachine = DESKTOP-5NCEGC8
+		StartingDirectory = E:\ULTIMATE MARVEL VS. CAPCOM 3
+		Environment = Default
+		LaunchingEngine = 00000000-0000-0000-0000-000000000000
+		UseLegacyDebugEngines = No
+		LaunchSQLEngine = No
+		AttachLaunchAction = No
+		IORedirection = Auto
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +35,10 @@ Global
 		{8539F2F2-70DC-453A-9A80-1D41AE524A59}.Release|x64.Build.0 = Release|x64
 		{8539F2F2-70DC-453A-9A80-1D41AE524A59}.Release|x86.ActiveCfg = Release|Win32
 		{8539F2F2-70DC-453A-9A80-1D41AE524A59}.Release|x86.Build.0 = Release|Win32
+		{5A3A0A95-D1AE-4F66-BCD4-2329DCBAF40B}.Debug|x64.ActiveCfg = Release|x64
+		{5A3A0A95-D1AE-4F66-BCD4-2329DCBAF40B}.Debug|x86.ActiveCfg = Release|x64
+		{5A3A0A95-D1AE-4F66-BCD4-2329DCBAF40B}.Release|x64.ActiveCfg = Release|x64
+		{5A3A0A95-D1AE-4F66-BCD4-2329DCBAF40B}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

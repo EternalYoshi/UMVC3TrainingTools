@@ -76,6 +76,7 @@ bool P1Char3Slow = false;
 bool P2Char1Slow = false;
 bool P2Char2Slow = false;
 bool P2Char3Slow = false;
+bool DarkPhoenix = false;
 
 int GameMode;
 
@@ -165,6 +166,116 @@ struct Recording {
 
 };
 
+struct FighterInstall
+{
+	int IdentifyingHashA;
+	int IdentifyingHashB;
+	int InstallID;
+	int mType;
+	float Duration;
+	int PossibleRelatedAnmchrEntry;
+	int mAblF;
+	int mAb2F;
+	float mLifeAdd;
+	float RedHealthRegen;//Either Converts Yellow Health to Red Health or heals current Red Health.
+	float MeterRegen;//Meter Regen.
+	float YellowHealthRegen;//Gained Yellow Health becomes Red Health. Can lose total HP with this and be set to 1HP.
+	float mRLifeAdd;
+	float MeterGain;
+	float mRLifeAddRate;
+	float DamageMultiplier;
+	float DefenseMultiplier;//Incoming Damage Multiplier.
+	float SpeedMultiplier;
+	float mSpArmorDmgRate;
+	int mSpArmorShield;
+	int UnknowmSpArmorShieldAddChr;
+	int mUserI;
+	int Unknown58;
+	int Unknown5C;
+	int Unknown60;
+	int mUserF;
+	int Unknown68;
+	int Unknown6C;
+	int Unknown70;
+	int Unknown74;
+	int Unknown78;
+	int Unknown7C;
+
+};
+
+FighterInstall EmptyInstall =
+{
+	1084673544,//IdentifyingHashA
+	1,//IdentifyingHashA
+	0,//InstallID
+	0,//mType
+	0.0,//Duration
+	0,//PossibleRelatedAnmchrEntry
+	0,
+	0,
+	0,//mLifeAdd
+	0,
+	0,
+	0,
+	1.0,
+	1.0,
+	1.0,
+	1.0,
+	1.0,
+	1.0,
+	-1.0,
+	-1,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	-1,
+	-0
+};
+
+FighterInstall DarkPhoenixInstall =
+{
+	1084673544,//IdentifyingHashA
+	1,//IdentifyingHashA
+	32784,//InstallID
+	18,//mType
+	0.0,//Duration
+	224,//PossibleRelatedAnmchrEntry
+	0,
+	0,
+	-2.34,//mLifeAdd
+	0,
+	0,
+	0,
+	1.0,
+	1.0,
+	1.0,
+	1.0,
+	1.0,
+	1.0,
+	-1.0,
+	-1,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	-1,
+	-0
+};
+
+
 enum WrightEvidence
 {
 	Nothing = -1,
@@ -185,6 +296,17 @@ enum WrightEvidence
 
 ScriptableFighter scriptableFighters[6] = { 0 };
 
+//Checks Character ID. Gotta rewrite this function later.
+bool CheckCharacterID(int CharacterID, int TargetID, uintptr_t mysterytable)
+{
+	if (CharacterID == TargetID)
+	{
+		return true;
+	}
+	else return false;
+
+
+}
 
 //Adjusts Frank's Level.
 void ChangeFrankLevel(int FrankLevel)
@@ -744,7 +866,7 @@ void SetIndividualCharacterHealth()
 		*(float*)_addr(P2C3 + 0x1550) = P2C3MaxHP * P2Char3Health;
 
 		//Applies the requested values to the characters' red health as well.
-		if(AlsoSetRedHealth == true)
+		if (AlsoSetRedHealth == true)
 		{
 			//P1 Character 1.
 			*(float*)_addr(P1C1 + 0x1558) = P1C1MaxHP * P1Char1Health;
@@ -863,7 +985,116 @@ bool CheckTheMode()
 	}
 }
 
+void PopTheBird()
+{
+	//Gets the needed values in memory. First these pointers.
+	uintptr_t mysterytable = *(uintptr_t*)_addr(0x140d533e0);
+	uintptr_t ptable = *(uintptr_t*)_addr(0x140d50e58);
 
+	uintptr_t P1C1 = *(uintptr_t*)_addr(mysterytable + 0xAA0);
+	uintptr_t P1C2 = *(uintptr_t*)_addr((mysterytable + 0xAA0) + (0x438 * 1));
+	uintptr_t P1C3 = *(uintptr_t*)_addr((mysterytable + 0xAA0) + (0x438 * 2));
+	uintptr_t P2C1 = *(uintptr_t*)_addr((mysterytable + 0xAA0) + (0x438 * 3));
+	uintptr_t P2C2 = *(uintptr_t*)_addr((mysterytable + 0xAA0) + (0x438 * 4));
+	uintptr_t P2C3 = *(uintptr_t*)_addr((mysterytable + 0xAA0) + (0x438 * 5));
+
+	int P1Character1ID = *(uintptr_t*)_addr((ptable + 0x44));
+	int P1Character2ID = *(uintptr_t*)_addr((ptable + 0x44 + 0x58));
+	int P1Character3ID = *(uintptr_t*)_addr((ptable + 0x44 + 0x58 + 0x58));
+	int P2Character1ID = *(uintptr_t*)_addr((ptable + 0x44 + 0x58 + 0x58 + 0x58));
+	int P2Character2ID = *(uintptr_t*)_addr((ptable + 0x44 + 0x58 + 0x58 + 0x58 + 0x58));
+	int P2Character3ID = *(uintptr_t*)_addr((ptable + 0x44 + 0x58 + 0x58 + 0x58 + 0x58 + 0x58));
+
+	if (P1Character1ID == 36)
+	{
+		if (DarkPhoenix == true) 
+		{
+			*((FighterInstall*)(P1C1 + 0x15F0)) = DarkPhoenixInstall;
+			//For The Portrait.
+			*((int*)(P1C1 + 0x6930)) = 1;
+		}
+		else
+		{
+			*((FighterInstall*)(P1C1 + 0x15F0)) = EmptyInstall;
+			*((int*)(P1C1 + 0x6930)) = 0;
+		}
+
+
+	}
+	if (P1Character2ID == 36)
+	{
+		if (DarkPhoenix == true)
+		{
+			*((FighterInstall*)(P1C2 + 0x15F0)) = DarkPhoenixInstall;
+			//For The Portrait.
+			*((int*)(P1C2 + 0x6930)) = 1;
+		}
+		else
+		{
+			*((FighterInstall*)(P1C2 + 0x15F0)) = EmptyInstall;
+			*((int*)(P1C2 + 0x6930)) = 0;
+		}
+	}
+	if (P1Character3ID == 36)
+	{
+		if (DarkPhoenix == true)
+		{
+			*((FighterInstall*)(P1C3 + 0x15F0)) = DarkPhoenixInstall;
+			//For The Portrait.
+			*((int*)(P1C3 + 0x6930)) = 1;
+		}
+		else
+		{
+			*((FighterInstall*)(P1C3 + 0x15F0)) = EmptyInstall;
+			*((int*)(P1C3 + 0x6930)) = 0;
+		}
+	}
+	if (P2Character1ID == 36)
+	{
+		if (DarkPhoenix == true)
+		{
+			*((FighterInstall*)(P2C1 + 0x15F0)) = DarkPhoenixInstall;
+			//For The Portrait.
+			*((int*)(P2C1 + 0x6930)) = 1;
+		}
+		else
+		{
+			*((FighterInstall*)(P2C1 + 0x15F0)) = EmptyInstall;
+			*((int*)(P2C1 + 0x6930)) = 0;
+		}
+	}
+	if (P2Character2ID == 36)
+	{
+		if (DarkPhoenix == true)
+		{
+			*((FighterInstall*)(P2C2 + 0x15F0)) = DarkPhoenixInstall;
+			//For The Portrait.
+			*((int*)(P2C2 + 0x6930)) = 1;
+		}
+		else
+		{
+			*((FighterInstall*)(P2C2 + 0x15F0)) = EmptyInstall;
+			*((int*)(P2C2 + 0x6930)) = 0;
+		}
+	}
+	if (P2Character3ID == 36)
+	{
+		if (DarkPhoenix == true)
+		{
+			*((FighterInstall*)(P2C3 + 0x15F0)) = DarkPhoenixInstall;
+			//For The Portrait.
+			*((int*)(P2C3 + 0x6930)) = 1;
+		}
+		else
+		{
+			*((FighterInstall*)(P2C3 + 0x15F0)) = EmptyInstall;
+			*((int*)(P2C3 + 0x6930)) = 0;
+		}
+	}
+
+
+
+}
 
 static void ShowHelpMarker(const char* desc)
 {
@@ -1030,6 +1261,11 @@ void UMVC3Menu::Draw()
 			{
 				EndlessXFactorUpdate();
 			}
+		}
+
+		if (DarkPhoenix == true)
+		{
+			PopTheBird();
 		}
 
 		//General training settings.
@@ -1431,6 +1667,17 @@ void UMVC3Menu::Draw()
 				}
 			}
 
+
+			ImGui::Separator();
+			ImGui::Text("Dark Phoenix Toggle");
+			if (ImGui::Checkbox("DarkPhoenixToggle", &DarkPhoenix))
+			{
+				if (CheckTheMode() == true)
+				{
+					PopTheBird();
+				}
+			}
+
 			ImGui::Separator();
 			ImGui::Text("Endless Install Toggle");
 			if (ImGui::Checkbox("EndlessInstallToggle", &EndlessInstalls))
@@ -1502,7 +1749,7 @@ void UMVC3Menu::Draw()
 
 			ImGui::Separator();
 
-			ImGui::Text("Dark Phoenix/Turnabout Mode Toggle\n(Coming whenever I can figure it out!)");
+			ImGui::Text("Turnabout Mode Toggle\n(Coming whenever I can figure it out!)");
 
 			ImGui::Separator();
 
