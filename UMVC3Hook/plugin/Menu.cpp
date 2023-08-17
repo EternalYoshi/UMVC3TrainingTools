@@ -1049,12 +1049,16 @@ void PopTheBird()
 			//For The Portrait.
 			*((int*)(P1C1 + 0x6930)) = 1;
 			*((int*)(P1C1 + 0x1548)) = 1;
+			*((int*)(P1C1 + 0x1588)) = 0;
+
 		}
 		else
 		{
 			*((FighterInstall*)(P1C1 + 0x15F0)) = EmptyInstall;
 			*((int*)(P1C1 + 0x6930)) = 0;
 			*((int*)(P1C1 + 0x1548)) = 0;
+			*((int*)(P1C1 + 0x1588)) = 16;
+
 		}
 
 
@@ -1067,12 +1071,15 @@ void PopTheBird()
 			//For The Portrait.
 			*((int*)(P1C2 + 0x6930)) = 1;
 			*((int*)(P1C2 + 0x1548)) = 1;
+			*((int*)(P1C2 + 0x1588)) = 0;
+
 		}
 		else
 		{
 			*((FighterInstall*)(P1C2 + 0x15F0)) = EmptyInstall;
 			*((int*)(P1C2 + 0x6930)) = 0;
 			*((int*)(P1C2 + 0x1548)) = 0;
+			*((int*)(P1C2 + 0x1588)) = 16;
 
 		}
 	}
@@ -1084,12 +1091,14 @@ void PopTheBird()
 			//For The Portrait.
 			*((int*)(P1C3 + 0x6930)) = 1;
 			*((int*)(P1C3 + 0x1548)) = 1;
+			*((int*)(P1C3 + 0x1548)) = 0;
 		}
 		else
 		{
 			*((FighterInstall*)(P1C3 + 0x15F0)) = EmptyInstall;
 			*((int*)(P1C3 + 0x6930)) = 0;
 			*((int*)(P1C3 + 0x1548)) = 0;
+			*((int*)(P1C3 + 0x1548)) = 16;
 		}
 	}
 	if (P2Character1ID == 36)
@@ -1100,12 +1109,14 @@ void PopTheBird()
 			//For The Portrait.
 			*((int*)(P2C1 + 0x6930)) = 1;
 			*((int*)(P2C1 + 0x1548)) = 1;
+			*((int*)(P2C1 + 0x1548)) = 0;
 		}
 		else
 		{
 			*((FighterInstall*)(P2C1 + 0x15F0)) = EmptyInstall;
 			*((int*)(P2C1 + 0x6930)) = 0;
 			*((int*)(P2C1 + 0x1548)) = 0;
+			*((int*)(P2C1 + 0x1548)) = 16;
 		}
 	}
 	if (P2Character2ID == 36)
@@ -1116,12 +1127,14 @@ void PopTheBird()
 			//For The Portrait.
 			*((int*)(P2C2 + 0x6930)) = 1;
 			*((int*)(P2C2 + 0x1548)) = 1;
+			*((int*)(P2C2 + 0x1548)) = 0;
 		}
 		else
 		{
 			*((FighterInstall*)(P2C2 + 0x15F0)) = EmptyInstall;
 			*((int*)(P2C2 + 0x6930)) = 0;
 			*((int*)(P2C2 + 0x1548)) = 0;
+			*((int*)(P2C2 + 0x1548)) = 16;
 		}
 	}
 	if (P2Character3ID == 36)
@@ -1132,12 +1145,14 @@ void PopTheBird()
 			//For The Portrait.
 			*((int*)(P2C3 + 0x6930)) = 1;
 			*((int*)(P2C3 + 0x1548)) = 1;
+			*((int*)(P2C3 + 0x1548)) = 0;
 		}
 		else
 		{
 			*((FighterInstall*)(P2C3 + 0x15F0)) = EmptyInstall;
 			*((int*)(P2C3 + 0x6930)) = 0;
 			*((int*)(P2C3 + 0x1548)) = 0;
+			*((int*)(P2C3 + 0x1548)) = 16;
 		}
 	}
 
@@ -1375,6 +1390,8 @@ void UMVC3Menu::Draw()
 	ImGui::GetIO().MouseDrawCursor = true;
 
 	ImGui::Begin("UMVC3Hook by ermaccer", &m_bIsActive, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoNav);
+	//ImGui::BeginChild("##scrolling", ImVec2(0, -ImGui::GetFrameHeightWithSpacing()));
+
 
 	//Start of my port of the Training Mode Tools mod I made in Spring. Still more to do.
 	ImGui::Text("Training Tools");
@@ -1923,6 +1940,7 @@ void UMVC3Menu::Draw()
 		ImGui::EndTabBar();
 	}
 	ImGui::End();
+	//ImGui::EndChild();
 
 	//Original Code Here.
 	/*
