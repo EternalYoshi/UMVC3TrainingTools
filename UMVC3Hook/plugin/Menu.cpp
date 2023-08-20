@@ -5,6 +5,10 @@
 #include "../gui/notifications.h"
 #include "../gui/imgui/imgui.h"
 #include "../umvc3/Camera.h"
+#include <stdio.h>
+#include <commdlg.h>
+#include <iostream>
+#include <fstream>
 
 #define undefined4 int
 static int64 timer = GetTickCount64();
@@ -100,7 +104,11 @@ constexpr int teamBackupSize = 0x960;
 uintptr_t inputRef;
 bool inputRefSet = false;
 bool recording = false;
+bool recordingP1 = false;
+bool recordingP2 = false;
 bool replaying = false;
+bool replayingP1 = false;
+bool replayingP2 = false;
 bool replayAvailable = false;
 bool replayAvailable2 = false;
 bool replayAvailable3 = false;
@@ -1423,12 +1431,33 @@ void FUN_1402b41b0(longlong param_1)
 				memcpy(&replayBuffer3[recordReplayIndex2], (uint8_t*)inputRef, ReplayBufferSize);
 				memcpy(&replayBuffer4[recordReplayIndex2], (uint8_t*)inputRef + 0x2c0, ReplayBufferSize);
 				recordReplayIndex2++;
-				replayAvailable = true;
+				replayAvailable2 = true;
 				if (recordReplayIndex2 >= ReplayLength - 1) {
 					recording = false;
 					recordedLength2 = recordReplayIndex2 - 1;
 				}
 			}
+			if (recordingP1) {
+				printf("recording %d\n", recordReplayIndex2);
+				memcpy(&replayBuffer3[recordReplayIndex2], (uint8_t*)inputRef, ReplayBufferSize);
+				recordReplayIndex2++;
+				replayAvailable2 = true;
+				if (recordReplayIndex2 >= ReplayLength - 1) {
+					recordingP1 = false;
+					recordedLength2 = recordReplayIndex2 - 1;
+				}
+			}
+			if (recordingP2) {
+				printf("recording %d\n", recordReplayIndex2);
+				memcpy(&replayBuffer4[recordReplayIndex2], (uint8_t*)inputRef + 0x2c0, ReplayBufferSize);
+				recordReplayIndex2++;
+				replayAvailable2 = true;
+				if (recordReplayIndex2 >= ReplayLength - 1) {
+					recordingP2 = false;
+					recordedLength2 = recordReplayIndex2 - 1;
+				}
+			}
+
 			if (replaying) {
 				printf("replaying %d\n", recordReplayIndex2);
 				memcpy((uint8_t*)inputRef, &replayBuffer3[recordReplayIndex2], ReplayBufferSize);
@@ -1438,6 +1467,23 @@ void FUN_1402b41b0(longlong param_1)
 					replaying = false;
 				}
 			}
+			if (replayingP1) {
+				printf("replaying %d\n", recordReplayIndex2);
+				memcpy((uint8_t*)inputRef, &replayBuffer3[recordReplayIndex2], ReplayBufferSize);
+				recordReplayIndex2++;
+				if (recordReplayIndex2 >= recordedLength2) {
+					replayingP1 = false;
+				}
+			}
+			if (replayingP2) {
+				printf("replaying %d\n", recordReplayIndex2);
+				memcpy((uint8_t*)inputRef + 0x2c0, &replayBuffer4[recordReplayIndex2], ReplayBufferSize);
+				recordReplayIndex2++;
+				if (recordReplayIndex2 >= recordedLength2) {
+					replayingP2 = false;
+				}
+			}
+
 		}
 		break;
 
@@ -1457,12 +1503,33 @@ void FUN_1402b41b0(longlong param_1)
 				memcpy(&replayBuffer5[recordReplayIndex3], (uint8_t*)inputRef, ReplayBufferSize);
 				memcpy(&replayBuffer6[recordReplayIndex3], (uint8_t*)inputRef + 0x2c0, ReplayBufferSize);
 				recordReplayIndex3++;
-				replayAvailable = true;
+				replayAvailable3 = true;
 				if (recordReplayIndex3 >= ReplayLength - 1) {
 					recording = false;
 					recordedLength3 = recordReplayIndex3 - 1;
 				}
 			}
+			if (recordingP1) {
+				printf("recording %d\n", recordReplayIndex3);
+				memcpy(&replayBuffer5[recordReplayIndex3], (uint8_t*)inputRef, ReplayBufferSize);
+				recordReplayIndex3++;
+				replayAvailable3 = true;
+				if (recordReplayIndex3 >= ReplayLength - 1) {
+					recordingP1 = false;
+					recordedLength3 = recordReplayIndex3 - 1;
+				}
+			}
+			if (recordingP2) {
+				printf("recording %d\n", recordReplayIndex3);
+				memcpy(&replayBuffer6[recordReplayIndex3], (uint8_t*)inputRef + 0x2c0, ReplayBufferSize);
+				recordReplayIndex3++;
+				replayAvailable3 = true;
+				if (recordReplayIndex3 >= ReplayLength - 1) {
+					recordingP2 = false;
+					recordedLength3 = recordReplayIndex3 - 1;
+				}
+			}
+
 			if (replaying) {
 				printf("replaying %d\n", recordReplayIndex3);
 				memcpy((uint8_t*)inputRef, &replayBuffer5[recordReplayIndex3], ReplayBufferSize);
@@ -1472,6 +1539,23 @@ void FUN_1402b41b0(longlong param_1)
 					replaying = false;
 				}
 			}
+			if (replayingP1) {
+				printf("replaying %d\n", recordReplayIndex3);
+				memcpy((uint8_t*)inputRef, &replayBuffer5[recordReplayIndex3], ReplayBufferSize);
+				recordReplayIndex3++;
+				if (recordReplayIndex3 >= recordedLength3) {
+					replayingP1 = false;
+				}
+			}
+			if (replayingP2) {
+				printf("replaying %d\n", recordReplayIndex3);
+				memcpy((uint8_t*)inputRef + 0x2c0, &replayBuffer6[recordReplayIndex3], ReplayBufferSize);
+				recordReplayIndex3++;
+				if (recordReplayIndex3 >= recordedLength3) {
+					replayingP2 = false;
+				}
+			}
+
 		}
 		break;
 
@@ -1491,9 +1575,29 @@ void FUN_1402b41b0(longlong param_1)
 				memcpy(&replayBuffer7[recordReplayIndex4], (uint8_t*)inputRef, ReplayBufferSize);
 				memcpy(&replayBuffer8[recordReplayIndex4], (uint8_t*)inputRef + 0x2c0, ReplayBufferSize);
 				recordReplayIndex4++;
-				replayAvailable = true;
+				replayAvailable4 = true;
 				if (recordReplayIndex4 >= ReplayLength - 1) {
 					recording = false;
+					recordedLength4 = recordReplayIndex4 - 1;
+				}
+			}
+			if (recordingP1) {
+				printf("recording %d\n", recordReplayIndex4);
+				memcpy(&replayBuffer7[recordReplayIndex4], (uint8_t*)inputRef, ReplayBufferSize);
+				recordReplayIndex4++;
+				replayAvailable4 = true;
+				if (recordReplayIndex4 >= ReplayLength - 1) {
+					recordingP1 = false;
+					recordedLength4 = recordReplayIndex4 - 1;
+				}
+			}
+			if (recordingP2) {
+				printf("recording %d\n", recordReplayIndex4);
+				memcpy(&replayBuffer8[recordReplayIndex4], (uint8_t*)inputRef + 0x2c0, ReplayBufferSize);
+				recordReplayIndex4++;
+				replayAvailable4 = true;
+				if (recordReplayIndex4 >= ReplayLength - 1) {
+					recordingP2 = false;
 					recordedLength4 = recordReplayIndex4 - 1;
 				}
 			}
@@ -1506,6 +1610,23 @@ void FUN_1402b41b0(longlong param_1)
 					replaying = false;
 				}
 			}
+			if (replayingP1) {
+				printf("replaying %d\n", recordReplayIndex4);
+				memcpy((uint8_t*)inputRef, &replayBuffer7[recordReplayIndex4], ReplayBufferSize);
+				recordReplayIndex4++;
+				if (recordReplayIndex4 >= recordedLength4) {
+					replayingP1 = false;
+				}
+			}
+			if (replayingP2) {
+				printf("replaying %d\n", recordReplayIndex4);
+				memcpy((uint8_t*)inputRef + 0x2c0, &replayBuffer8[recordReplayIndex4], ReplayBufferSize);
+				recordReplayIndex4++;
+				if (recordReplayIndex4 >= recordedLength4) {
+					replayingP2 = false;
+				}
+			}
+
 		}
 		break;
 
@@ -1525,9 +1646,29 @@ void FUN_1402b41b0(longlong param_1)
 				memcpy(&replayBuffer9[recordReplayIndex5], (uint8_t*)inputRef, ReplayBufferSize);
 				memcpy(&replayBuffer10[recordReplayIndex5], (uint8_t*)inputRef + 0x2c0, ReplayBufferSize);
 				recordReplayIndex5++;
-				replayAvailable = true;
+				replayAvailable5 = true;
 				if (recordReplayIndex5 >= ReplayLength - 1) {
 					recording = false;
+					recordedLength5 = recordReplayIndex5 - 1;
+				}
+			}
+			if (recordingP1) {
+				printf("recording %d\n", recordReplayIndex5);
+				memcpy(&replayBuffer9[recordReplayIndex5], (uint8_t*)inputRef, ReplayBufferSize);
+				recordReplayIndex5++;
+				replayAvailable5 = true;
+				if (recordReplayIndex5 >= ReplayLength - 1) {
+					recordingP1 = false;
+					recordedLength5 = recordReplayIndex5 - 1;
+				}
+			}
+			if (recordingP2) {
+				printf("recording %d\n", recordReplayIndex5);
+				memcpy(&replayBuffer10[recordReplayIndex5], (uint8_t*)inputRef + 0x2c0, ReplayBufferSize);
+				recordReplayIndex5++;
+				replayAvailable5 = true;
+				if (recordReplayIndex5 >= ReplayLength - 1) {
+					recordingP2 = false;
 					recordedLength5 = recordReplayIndex5 - 1;
 				}
 			}
@@ -1540,6 +1681,23 @@ void FUN_1402b41b0(longlong param_1)
 					replaying = false;
 				}
 			}
+			if (replayingP1) {
+				printf("replaying %d\n", recordReplayIndex5);
+				memcpy((uint8_t*)inputRef, &replayBuffer9[recordReplayIndex5], ReplayBufferSize);
+				recordReplayIndex5++;
+				if (recordReplayIndex5 >= recordedLength5) {
+					replayingP1 = false;
+				}
+			}
+			if (replayingP2) {
+				printf("replaying %d\n", recordReplayIndex5);
+				memcpy((uint8_t*)inputRef + 0x2c0, &replayBuffer10[recordReplayIndex5], ReplayBufferSize);
+				recordReplayIndex5++;
+				if (recordReplayIndex5 >= recordedLength5) {
+					replayingP2 = false;
+				}
+			}
+
 		}
 		break;
 
@@ -1566,6 +1724,26 @@ void FUN_1402b41b0(longlong param_1)
 					recordedLength = recordReplayIndex - 1;
 				}
 			}
+			if (recordingP1) {
+				printf("recording %d\n", recordReplayIndex);
+				memcpy(&replayBuffer[recordReplayIndex], (uint8_t*)inputRef, ReplayBufferSize);
+				recordReplayIndex++;
+				replayAvailable = true;
+				if (recordReplayIndex >= ReplayLength - 1) {
+					recordingP1 = false;
+					recordedLength = recordReplayIndex - 1;
+				}
+			}
+			if (recordingP2) {
+				printf("recording %d\n", recordReplayIndex);
+				memcpy(&replayBuffer2[recordReplayIndex], (uint8_t*)inputRef + 0x2c0, ReplayBufferSize);
+				recordReplayIndex++;
+				replayAvailable = true;
+				if (recordReplayIndex >= ReplayLength - 1) {
+					recordingP2 = false;
+					recordedLength = recordReplayIndex - 1;
+				}
+			}
 			if (replaying) {
 				printf("replaying %d\n", recordReplayIndex);
 				memcpy((uint8_t*)inputRef, &replayBuffer[recordReplayIndex], ReplayBufferSize);
@@ -1575,6 +1753,23 @@ void FUN_1402b41b0(longlong param_1)
 					replaying = false;
 				}
 			}
+			if (replayingP1) {
+				printf("replaying %d\n", recordReplayIndex);
+				memcpy((uint8_t*)inputRef, &replayBuffer[recordReplayIndex], ReplayBufferSize);
+				recordReplayIndex++;
+				if (recordReplayIndex >= recordedLength) {
+					replayingP1 = false;
+				}
+			}
+			if (replayingP2) {
+				printf("replaying %d\n", recordReplayIndex);
+				memcpy((uint8_t*)inputRef + 0x2c0, &replayBuffer2[recordReplayIndex], ReplayBufferSize);
+				recordReplayIndex++;
+				if (recordReplayIndex >= recordedLength) {
+					replayingP2 = false;
+				}
+			}
+
 		}
 		break;
 	}
@@ -1612,7 +1807,7 @@ void UMVC3Menu::Draw()
 {
 	if (!m_bIsActive)
 		return;
-
+	FILE* pRec;
 	Trampoline* tramp = Trampoline::MakeTrampoline(GetModuleHandle(nullptr));
 	InjectHook(_addr(0x140289c5a), tramp->Jump(FUN_1402b41b0), PATCH_CALL);
 	auto block2 = *(uintptr_t*)_addr(0x140d47e68);
@@ -2208,27 +2403,64 @@ void UMVC3Menu::Draw()
 
 			case 2:
 
-				if (!recording) {
-					if (ImGui::Button("Record")) {
+				if (!recording && !recordingP1 && !recordingP2) {
+					if (ImGui::Button("Record Both")) {
 						if (CheckTheMode() == true)
 						{
 							recording = true;
 							replaying = false;
+							recordingP1 = false;
+							replayingP1 = false;
+							recordingP2 = false;
+							replayingP2 = false;
 							recordReplayIndex2 = 0;
 						}
 					}
 				}
+				ImGui::SameLine();
+				if (!recording && !recordingP1 && !recordingP2) {
+					if (ImGui::Button("Record P1")) {
+						if (CheckTheMode() == true)
+						{
+							recordingP1 = true;
+							replayingP1 = false;
+							recording = false;
+							replaying = false;
+							recordingP2 = false;
+							replayingP2 = false;
+							recordReplayIndex2 = 0;
+						}
+					}
+				}
+				ImGui::SameLine();
+				if (!recording && !recordingP1 && !recordingP2) {
+					if (ImGui::Button("Record P2")) {
+						if (CheckTheMode() == true)
+						{
+							recordingP2 = true;
+							replayingP2 = false;
+							recording = false;
+							replaying = false;
+							recordingP1 = false;
+							replayingP1 = false;
+							recordReplayIndex2 = 0;
+						}
+					}
+				}
+
 				else if (recordReplayIndex2 > 90) {
 					if (ImGui::Button("Stop Recording")) {
 						if (CheckTheMode() == true)
 						{
 							recording = false;
+							recordingP1 = false;
+							recordingP2 = false;
 							recordedLength2 = recordReplayIndex2 - 1;
 						}
 					}
 				}
-				ImGui::SameLine();					
-				ImGui::Text("Time: " + recordedLength2);
+
+				//Playback Code Below.
 
 				if (replayAvailable2 && !recording) {
 					if (!replaying) {
@@ -2252,32 +2484,116 @@ void UMVC3Menu::Draw()
 					}
 				}
 
+				ImGui::SameLine();
+
+				if (replayAvailable2 && !recordingP1) {
+					if (!replayingP1) {
+						if (ImGui::Button("Playback P1")) {
+							if (CheckTheMode() == true)
+							{
+								replayingP1 = true;
+								recordReplayIndex2 = 0;
+							}
+
+						}
+					}
+					else if (recordReplayIndex2 > 90) {
+						if (ImGui::Button("Stop Playback P1"))
+						{
+							if (CheckTheMode() == true)
+							{
+								replayingP1 = false;
+							}
+						}
+					}
+				}
+
+				ImGui::SameLine();
+
+				if (replayAvailable2 && !recordingP2) {
+					if (!replayingP2) {
+						if (ImGui::Button("Playback P2")) {
+							if (CheckTheMode() == true)
+							{
+								replayingP2 = true;
+								recordReplayIndex2 = 0;
+							}
+
+						}
+					}
+					else if (recordReplayIndex2 > 90) {
+						if (ImGui::Button("Stop Playback P2"))
+						{
+							if (CheckTheMode() == true)
+							{
+								replayingP2 = false;
+							}
+						}
+					}
+				}
 
 				break;
 
 			case 3:
 
-				if (!recording) {
-					if (ImGui::Button("Record")) {
+				if (!recording && !recordingP1 && !recordingP2) {
+					if (ImGui::Button("Record Both")) {
 						if (CheckTheMode() == true)
 						{
 							recording = true;
 							replaying = false;
+							recordingP1 = false;
+							replayingP1 = false;
+							recordingP2 = false;
+							replayingP2 = false;
 							recordReplayIndex3 = 0;
 						}
 					}
 				}
+				ImGui::SameLine();
+				if (!recording && !recordingP1 && !recordingP2) {
+					if (ImGui::Button("Record P1")) {
+						if (CheckTheMode() == true)
+						{
+							recordingP1 = true;
+							replayingP1 = false;
+							recording = false;
+							replaying = false;
+							recordingP2 = false;
+							replayingP2 = false;
+							recordReplayIndex3 = 0;
+						}
+					}
+				}
+				ImGui::SameLine();
+				if (!recording && !recordingP1 && !recordingP2) {
+					if (ImGui::Button("Record P2")) {
+						if (CheckTheMode() == true)
+						{
+							recordingP2 = true;
+							replayingP2 = false;
+							recording = false;
+							replaying = false;
+							recordingP1 = false;
+							replayingP1 = false;
+							recordReplayIndex3 = 0;
+						}
+					}
+				}
+
 				else if (recordReplayIndex3 > 90) {
 					if (ImGui::Button("Stop Recording")) {
 						if (CheckTheMode() == true)
 						{
 							recording = false;
+							recordingP1 = false;
+							recordingP2 = false;
 							recordedLength3 = recordReplayIndex3 - 1;
 						}
 					}
 				}
-				ImGui::SameLine();
-				ImGui::Text("Time: " + recordedLength3);
+
+				//Playback Code Below.
 
 				if (replayAvailable3 && !recording) {
 					if (!replaying) {
@@ -2301,32 +2617,116 @@ void UMVC3Menu::Draw()
 					}
 				}
 
+				ImGui::SameLine();
+
+				if (replayAvailable3 && !recordingP1) {
+					if (!replayingP1) {
+						if (ImGui::Button("Playback P1")) {
+							if (CheckTheMode() == true)
+							{
+								replayingP1 = true;
+								recordReplayIndex3 = 0;
+							}
+
+						}
+					}
+					else if (recordReplayIndex3 > 90) {
+						if (ImGui::Button("Stop Playback P1"))
+						{
+							if (CheckTheMode() == true)
+							{
+								replayingP1 = false;
+							}
+						}
+					}
+				}
+
+				ImGui::SameLine();
+
+				if (replayAvailable3 && !recordingP2) {
+					if (!replayingP2) {
+						if (ImGui::Button("Playback P2")) {
+							if (CheckTheMode() == true)
+							{
+								replayingP2 = true;
+								recordReplayIndex3 = 0;
+							}
+
+						}
+					}
+					else if (recordReplayIndex3 > 90) {
+						if (ImGui::Button("Stop Playback P2"))
+						{
+							if (CheckTheMode() == true)
+							{
+								replayingP2 = false;
+							}
+						}
+					}
+				}
 
 				break;
 
 			case 4:
 
-				if (!recording) {
-					if (ImGui::Button("Record")) {
+				if (!recording && !recordingP1 && !recordingP2) {
+					if (ImGui::Button("Record Both")) {
 						if (CheckTheMode() == true)
 						{
 							recording = true;
 							replaying = false;
+							recordingP1 = false;
+							replayingP1 = false;
+							recordingP2 = false;
+							replayingP2 = false;
 							recordReplayIndex4 = 0;
 						}
 					}
 				}
+				ImGui::SameLine();
+				if (!recording && !recordingP1 && !recordingP2) {
+					if (ImGui::Button("Record P1")) {
+						if (CheckTheMode() == true)
+						{
+							recordingP1 = true;
+							replayingP1 = false;
+							recording = false;
+							replaying = false;
+							recordingP2 = false;
+							replayingP2 = false;
+							recordReplayIndex4 = 0;
+						}
+					}
+				}
+				ImGui::SameLine();
+				if (!recording && !recordingP1 && !recordingP2) {
+					if (ImGui::Button("Record P2")) {
+						if (CheckTheMode() == true)
+						{
+							recordingP2 = true;
+							replayingP2 = false;
+							recording = false;
+							replaying = false;
+							recordingP1 = false;
+							replayingP1 = false;
+							recordReplayIndex4 = 0;
+						}
+					}
+				}
+
 				else if (recordReplayIndex4 > 90) {
 					if (ImGui::Button("Stop Recording")) {
 						if (CheckTheMode() == true)
 						{
 							recording = false;
+							recordingP1 = false;
+							recordingP2 = false;
 							recordedLength4 = recordReplayIndex4 - 1;
 						}
 					}
 				}
-				ImGui::SameLine();
-				ImGui::Text("Time: " + recordedLength4);
+
+				//Playback Code Below.
 
 				if (replayAvailable4 && !recording) {
 					if (!replaying) {
@@ -2350,31 +2750,117 @@ void UMVC3Menu::Draw()
 					}
 				}
 
+				ImGui::SameLine();
+
+				if (replayAvailable4 && !recordingP1) {
+					if (!replayingP1) {
+						if (ImGui::Button("Playback P1")) {
+							if (CheckTheMode() == true)
+							{
+								replayingP1 = true;
+								recordReplayIndex4 = 0;
+							}
+
+						}
+					}
+					else if (recordReplayIndex4 > 90) {
+						if (ImGui::Button("Stop Playback P1"))
+						{
+							if (CheckTheMode() == true)
+							{
+								replayingP1 = false;
+							}
+						}
+					}
+				}
+
+				ImGui::SameLine();
+
+				if (replayAvailable4 && !recordingP2) {
+					if (!replayingP2) {
+						if (ImGui::Button("Playback P2")) {
+							if (CheckTheMode() == true)
+							{
+								replayingP2 = true;
+								recordReplayIndex4 = 0;
+							}
+
+						}
+					}
+					else if (recordReplayIndex4 > 90) {
+						if (ImGui::Button("Stop Playback P2"))
+						{
+							if (CheckTheMode() == true)
+							{
+								replayingP2 = false;
+							}
+						}
+					}
+				}
 
 				break;
 
 			case 5:
-				if (!recording) {
-					if (ImGui::Button("Record")) {
+
+				if (!recording && !recordingP1 && !recordingP2) {
+					if (ImGui::Button("Record Both")) {
 						if (CheckTheMode() == true)
 						{
 							recording = true;
 							replaying = false;
+							recordingP1 = false;
+							replayingP1 = false;
+							recordingP2 = false;
+							replayingP2 = false;
 							recordReplayIndex5 = 0;
 						}
 					}
 				}
+				ImGui::SameLine();
+				if (!recording && !recordingP1 && !recordingP2) {
+					if (ImGui::Button("Record P1")) {
+						if (CheckTheMode() == true)
+						{
+							recordingP1 = true;
+							replayingP1 = false;
+							recording = false;
+							replaying = false;
+							recordingP2 = false;
+							replayingP2 = false;
+							recordReplayIndex5 = 0;
+						}
+					}
+				}
+				ImGui::SameLine();
+				if (!recording && !recordingP1 && !recordingP2) {
+					if (ImGui::Button("Record P2")) {
+						if (CheckTheMode() == true)
+						{
+							recordingP2 = true;
+							replayingP2 = false;
+							recording = false;
+							replaying = false;
+							recordingP1 = false;
+							replayingP1 = false;
+							recordReplayIndex5 = 0;
+						}
+					}
+				}
+
 				else if (recordReplayIndex5 > 90) {
 					if (ImGui::Button("Stop Recording")) {
 						if (CheckTheMode() == true)
 						{
 							recording = false;
+							recordingP1 = false;
+							recordingP2 = false;
 							recordedLength5 = recordReplayIndex5 - 1;
 						}
 					}
 				}
-				ImGui::SameLine();
-				ImGui::Text("Time: " + recordedLength5);
+
+				//Playback Code Below.
+
 
 				if (replayAvailable5 && !recording) {
 					if (!replaying) {
@@ -2398,35 +2884,121 @@ void UMVC3Menu::Draw()
 					}
 				}
 
+				ImGui::SameLine();
+
+				if (replayAvailable5 && !recordingP1) {
+					if (!replayingP1) {
+						if (ImGui::Button("Playback P1")) {
+							if (CheckTheMode() == true)
+							{
+								replayingP1 = true;
+								recordReplayIndex5 = 0;
+							}
+
+						}
+					}
+					else if (recordReplayIndex5 > 90) {
+						if (ImGui::Button("Stop Playback P1"))
+						{
+							if (CheckTheMode() == true)
+							{
+								replayingP1 = false;
+							}
+						}
+					}
+				}
+
+				ImGui::SameLine();
+
+				if (replayAvailable5 && !recordingP2) {
+					if (!replayingP2) {
+						if (ImGui::Button("Playback P2")) {
+							if (CheckTheMode() == true)
+							{
+								replayingP2 = true;
+								recordReplayIndex5 = 0;
+							}
+
+						}
+					}
+					else if (recordReplayIndex5 > 90) {
+						if (ImGui::Button("Stop Playback P2"))
+						{
+							if (CheckTheMode() == true)
+							{
+								replayingP2 = false;
+							}
+						}
+					}
+				}
 
 				break;
 
 			case 1:
 			default:
 
-				if (!recording) {
-					if (ImGui::Button("Record")) {
+				if (!recording && !recordingP1 && !recordingP2) {
+					if (ImGui::Button("Record Both")) {
 						if (CheckTheMode() == true)
 						{
 							recording = true;
 							replaying = false;
+							recordingP1 = false;
+							replayingP1 = false;
+							recordingP2 = false;
+							replayingP2 = false;
 							recordReplayIndex = 0;
 						}
 					}
 				}
+				//ImGui::SameLine();
+				if (!recording && !recordingP1 && !recordingP2) {
+					if (ImGui::Button("Record P1")) {
+						if (CheckTheMode() == true)
+						{
+							recordingP1 = true;
+							replayingP1 = false;
+							recording = false;
+							replaying = false;
+							recordingP2 = false;
+							replayingP2 = false;
+							recordReplayIndex = 0;
+						}
+					}
+					ImGui::SameLine();
+				}
+				//ImGui::SameLine();
+				if (!recording && !recordingP1 && !recordingP2) {
+					if (ImGui::Button("Record P2")) {
+						if (CheckTheMode() == true)
+						{
+							recordingP2 = true;
+							replayingP2 = false;
+							recording = false;
+							replaying = false;
+							recordingP1 = false;
+							replayingP1 = false;
+							recordReplayIndex = 0;
+						}
+					}
+				}
+
 				else if (recordReplayIndex > 90) {
 					if (ImGui::Button("Stop Recording")) {
 						if (CheckTheMode() == true)
 						{
 							recording = false;
+							recordingP1 = false;
+							recordingP2 = false;
 							recordedLength = recordReplayIndex - 1;
 						}
 					}
 				}
-				ImGui::SameLine();
-				ImGui::Text("Time: " + recordedLength);
 
-				if (replayAvailable && !recording) {
+				//Playback Code Below.
+				ImGui::Separator();
+
+				if (replayAvailable && !recording && !recordingP1 && !recordingP2) {
 					if (!replaying) {
 						if (ImGui::Button("Playback")) {
 							if (CheckTheMode() == true)
@@ -2448,12 +3020,99 @@ void UMVC3Menu::Draw()
 					}
 				}
 
+
+				if (replayAvailable && !recording && !recordingP1) {
+					if (!replayingP1) {
+						if (ImGui::Button("Playback P1")) {
+							if (CheckTheMode() == true)
+							{
+								replayingP1 = true;
+								recordReplayIndex = 0;
+							}
+
+						}
+					}
+					else if (recordReplayIndex > 90) {
+						if (ImGui::Button("Stop Playback P1"))
+						{
+							if (CheckTheMode() == true)
+							{
+								replayingP1 = false;
+							}
+						}
+					}
+					ImGui::SameLine();
+				}
+
+
+				if (replayAvailable && !recording && !recordingP2) {
+					if (!replayingP2) {
+						if (ImGui::Button("Playback P2")) {
+							if (CheckTheMode() == true)
+							{
+								replayingP2 = true;
+								recordReplayIndex = 0;
+							}
+
+						}
+					}
+					else if (recordReplayIndex > 90) {
+						if (ImGui::Button("Stop Playback P2"))
+						{
+							if (CheckTheMode() == true)
+							{
+								replayingP2 = false;
+							}
+						}
+					}
+				}
+
+
+				ImGui::Separator();
+
+				//Saves Recordings.
+				if (ImGui::Button("Save Recording"))
+				{
+					if (CheckTheMode() == true)
+					{
+						if (!recording && replayAvailable)
+						{
+							OPENFILENAME ofn = { sizeof(OPENFILENAME) };
+
+							char szFile[_MAX_PATH] = "Rec";
+							const char szExt[] = ".dat\0"; // extra '\0' for lpstrFilter
+
+							ofn.hwndOwner = GetConsoleWindow();
+							ofn.lpstrFile = szFile; // <--------------------- initial file name
+							ofn.nMaxFile = sizeof(szFile) / sizeof(szFile[0]);
+							ofn.lpstrFilter = ofn.lpstrDefExt = szExt;
+							ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
+
+							if (GetSaveFileName(&ofn))
+							{
+								pRec = fopen(ofn.lpstrFile, "wb");
+								fwrite(replayBuffer, ReplayBufferSize, ReplayLength, pRec);
+
+							}
+						}
+					}
+				}
+
+				//Loads Recordings. To Be Continued....
+				if (ImGui::Button("Load Recording"))
+				{
+					if (CheckTheMode() == true)
+					{
+						if (!recording)
+						{
+
+
+						}
+					}
+				}
+
 				break;
 			}
-
-
-
-
 
 			if (RecordingSlot)
 			{
@@ -2468,7 +3127,6 @@ void UMVC3Menu::Draw()
 			}
 
 			//auto sigger = sigscan::get();
-
 
 			ImGui::Separator();
 
