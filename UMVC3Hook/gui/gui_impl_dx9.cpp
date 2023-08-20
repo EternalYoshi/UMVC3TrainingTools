@@ -34,8 +34,12 @@ bool GUIImplementationDX9::ImGui_Init(LPDIRECT3DDEVICE9 pDevice)
 	}
 
 	ImGui::GetIO().ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange;
-	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+	//ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	//ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	//ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+	//ImGui::GetIO().ConfigViewportsNoAutoMerge = true;
+	//ImGui::GetIO().ConfigViewportsNoTaskBarIcon = true;
 
 	if (!ImGui_ImplWin32_Init(ms_hWindow))
 	{
@@ -179,6 +183,10 @@ void GUIImplementationDX9::ImGui_Process(LPDIRECT3DDEVICE9 pDevice)
 	ImGui::Render();
 
 	ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
+
+	//ImGui::UpdatePlatformWindows();
+
+
 }
 
 void GUIImplementationDX9::GUI_Process()

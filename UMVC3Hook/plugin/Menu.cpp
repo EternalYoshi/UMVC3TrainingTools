@@ -1,13 +1,13 @@
 //By Eternal Yoshi. Thanks to ermaccer for the new hook & HKHaan and Sheep for collecting the pointers and data needed to make this possible.
 #include "Menu.h"
 #include "Settings.h"
-
+//#include "..\sigscan.h"
 #include "../gui/notifications.h"
 #include "../gui/imgui/imgui.h"
-
 #include "../umvc3/Camera.h"
 
 #define undefined4 int
+static int64 timer = GetTickCount64();
 
 float p1Pos = -125.0f;
 float p2Pos = 125.0f;
@@ -78,6 +78,57 @@ bool P2Char2Slow = false;
 bool P2Char3Slow = false;
 bool DarkPhoenix = false;
 bool Turnabout = false;
+
+#define longlong  long long
+#define ulonglong  unsigned long long
+#define undefined8  long long*
+#define undefined7  long long
+#define undefined2  int
+
+typedef int (*code)(longlong* param_1);
+typedef int (*codenoarg)();
+typedef void (*method)(void);
+#define undefined int
+#define undefined4 int
+#define CONCAT71(a,b) (a<<32 | b)
+#define backupsize 10000//100000
+#define prebackup 0 //100000
+
+constexpr int backupSize = 1000;
+constexpr int teamBackupSize = 0x960;
+
+uintptr_t inputRef;
+bool inputRefSet = false;
+bool recording = false;
+bool replaying = false;
+bool replayAvailable = false;
+bool replayAvailable2 = false;
+bool replayAvailable3 = false;
+bool replayAvailable4 = false;
+bool replayAvailable5 = false;
+int recordReplayIndex = 0;
+int recordReplayIndex2 = 0;
+int recordReplayIndex3 = 0;
+int recordReplayIndex4 = 0;
+int recordReplayIndex5 = 0;
+int recordedLength = 0;
+int recordedLength2 = 0;
+int recordedLength3 = 0;
+int recordedLength4 = 0;
+int recordedLength5 = 0;
+int RecordingSlot = 1;
+#define ReplayLength (60*120)
+#define ReplayBufferSize 550
+uint8_t replayBuffer[ReplayLength][ReplayBufferSize];
+uint8_t replayBuffer2[ReplayLength][ReplayBufferSize];
+uint8_t replayBuffer3[ReplayLength][ReplayBufferSize];
+uint8_t replayBuffer4[ReplayLength][ReplayBufferSize];
+uint8_t replayBuffer5[ReplayLength][ReplayBufferSize];
+uint8_t replayBuffer6[ReplayLength][ReplayBufferSize];
+uint8_t replayBuffer7[ReplayLength][ReplayBufferSize];
+uint8_t replayBuffer8[ReplayLength][ReplayBufferSize];
+uint8_t replayBuffer9[ReplayLength][ReplayBufferSize];
+uint8_t replayBuffer10[ReplayLength][ReplayBufferSize];
 
 int GameMode;
 
@@ -830,7 +881,7 @@ void SetDeadpoolTeleport()
 
 }
 
-/*
+
 //Saves Raw Replay Data
 void SaveReplayP1()
 {
@@ -849,7 +900,7 @@ void SaveReplayP1()
 
 
 }
-*/
+
 void DeathBoolUpdate()
 {
 
@@ -1043,7 +1094,7 @@ void PopTheBird()
 
 	if (P1Character1ID == 36)
 	{
-		if (DarkPhoenix == true) 
+		if (DarkPhoenix == true)
 		{
 			*((FighterInstall*)(P1C1 + 0x15F0)) = DarkPhoenixInstall;
 			//For The Portrait.
@@ -1162,7 +1213,7 @@ void PopTheBird()
 
 void Objection()
 {
-	
+
 	//Gets the needed values in memory. First these pointers.
 	uintptr_t mysterytable = *(uintptr_t*)_addr(0x140d533e0);
 	uintptr_t ptable = *(uintptr_t*)_addr(0x140d50e58);
@@ -1350,11 +1401,220 @@ void GetTheImportantAddresses()
 
 }
 
+//Based on the hook by SanHKHaan. Modified for use with multiple slots.
+void FUN_1402b41b0(longlong param_1)
+{
+	switch (RecordingSlot)
+	{
+
+	case 2:
+
+		printf("replay %x\n", param_1);
+		if (!inputRefSet) {
+			inputRefSet = true;
+			inputRef = (uintptr_t)param_1;
+			printf("replayu %x\n", param_1);
+		}
+
+		((void (*)(longlong))_addr(0x1402b41b0))(param_1);
+		if (inputRefSet) {
+			if (recording) {
+				printf("recording %d\n", recordReplayIndex2);
+				memcpy(&replayBuffer3[recordReplayIndex2], (uint8_t*)inputRef, ReplayBufferSize);
+				memcpy(&replayBuffer4[recordReplayIndex2], (uint8_t*)inputRef + 0x2c0, ReplayBufferSize);
+				recordReplayIndex2++;
+				replayAvailable = true;
+				if (recordReplayIndex2 >= ReplayLength - 1) {
+					recording = false;
+					recordedLength2 = recordReplayIndex2 - 1;
+				}
+			}
+			if (replaying) {
+				printf("replaying %d\n", recordReplayIndex2);
+				memcpy((uint8_t*)inputRef, &replayBuffer3[recordReplayIndex2], ReplayBufferSize);
+				memcpy((uint8_t*)inputRef + 0x2c0, &replayBuffer4[recordReplayIndex2], ReplayBufferSize);
+				recordReplayIndex2++;
+				if (recordReplayIndex2 >= recordedLength2) {
+					replaying = false;
+				}
+			}
+		}
+		break;
+
+	case 3:
+
+		printf("replay %x\n", param_1);
+		if (!inputRefSet) {
+			inputRefSet = true;
+			inputRef = (uintptr_t)param_1;
+			printf("replayu %x\n", param_1);
+		}
+
+		((void (*)(longlong))_addr(0x1402b41b0))(param_1);
+		if (inputRefSet) {
+			if (recording) {
+				printf("recording %d\n", recordReplayIndex3);
+				memcpy(&replayBuffer5[recordReplayIndex3], (uint8_t*)inputRef, ReplayBufferSize);
+				memcpy(&replayBuffer6[recordReplayIndex3], (uint8_t*)inputRef + 0x2c0, ReplayBufferSize);
+				recordReplayIndex3++;
+				replayAvailable = true;
+				if (recordReplayIndex3 >= ReplayLength - 1) {
+					recording = false;
+					recordedLength3 = recordReplayIndex3 - 1;
+				}
+			}
+			if (replaying) {
+				printf("replaying %d\n", recordReplayIndex3);
+				memcpy((uint8_t*)inputRef, &replayBuffer5[recordReplayIndex3], ReplayBufferSize);
+				memcpy((uint8_t*)inputRef + 0x2c0, &replayBuffer6[recordReplayIndex3], ReplayBufferSize);
+				recordReplayIndex3++;
+				if (recordReplayIndex3 >= recordedLength3) {
+					replaying = false;
+				}
+			}
+		}
+		break;
+
+	case 4:
+
+		printf("replay %x\n", param_1);
+		if (!inputRefSet) {
+			inputRefSet = true;
+			inputRef = (uintptr_t)param_1;
+			printf("replayu %x\n", param_1);
+		}
+
+		((void (*)(longlong))_addr(0x1402b41b0))(param_1);
+		if (inputRefSet) {
+			if (recording) {
+				printf("recording %d\n", recordReplayIndex4);
+				memcpy(&replayBuffer7[recordReplayIndex4], (uint8_t*)inputRef, ReplayBufferSize);
+				memcpy(&replayBuffer8[recordReplayIndex4], (uint8_t*)inputRef + 0x2c0, ReplayBufferSize);
+				recordReplayIndex4++;
+				replayAvailable = true;
+				if (recordReplayIndex4 >= ReplayLength - 1) {
+					recording = false;
+					recordedLength4 = recordReplayIndex4 - 1;
+				}
+			}
+			if (replaying) {
+				printf("replaying %d\n", recordReplayIndex4);
+				memcpy((uint8_t*)inputRef, &replayBuffer7[recordReplayIndex4], ReplayBufferSize);
+				memcpy((uint8_t*)inputRef + 0x2c0, &replayBuffer8[recordReplayIndex4], ReplayBufferSize);
+				recordReplayIndex4++;
+				if (recordReplayIndex4 >= recordedLength4) {
+					replaying = false;
+				}
+			}
+		}
+		break;
+
+	case 5:
+
+		printf("replay %x\n", param_1);
+		if (!inputRefSet) {
+			inputRefSet = true;
+			inputRef = (uintptr_t)param_1;
+			printf("replayu %x\n", param_1);
+		}
+
+		((void (*)(longlong))_addr(0x1402b41b0))(param_1);
+		if (inputRefSet) {
+			if (recording) {
+				printf("recording %d\n", recordReplayIndex5);
+				memcpy(&replayBuffer9[recordReplayIndex5], (uint8_t*)inputRef, ReplayBufferSize);
+				memcpy(&replayBuffer10[recordReplayIndex5], (uint8_t*)inputRef + 0x2c0, ReplayBufferSize);
+				recordReplayIndex5++;
+				replayAvailable = true;
+				if (recordReplayIndex5 >= ReplayLength - 1) {
+					recording = false;
+					recordedLength5 = recordReplayIndex5 - 1;
+				}
+			}
+			if (replaying) {
+				printf("replaying %d\n", recordReplayIndex5);
+				memcpy((uint8_t*)inputRef, &replayBuffer9[recordReplayIndex5], ReplayBufferSize);
+				memcpy((uint8_t*)inputRef + 0x2c0, &replayBuffer10[recordReplayIndex5], ReplayBufferSize);
+				recordReplayIndex5++;
+				if (recordReplayIndex5 >= recordedLength5) {
+					replaying = false;
+				}
+			}
+		}
+		break;
+
+	case 1:
+	default:
+
+		printf("replay %x\n", param_1);
+		if (!inputRefSet) {
+			inputRefSet = true;
+			inputRef = (uintptr_t)param_1;
+			printf("replayu %x\n", param_1);
+		}
+
+		((void (*)(longlong))_addr(0x1402b41b0))(param_1);
+		if (inputRefSet) {
+			if (recording) {
+				printf("recording %d\n", recordReplayIndex);
+				memcpy(&replayBuffer[recordReplayIndex], (uint8_t*)inputRef, ReplayBufferSize);
+				memcpy(&replayBuffer2[recordReplayIndex], (uint8_t*)inputRef + 0x2c0, ReplayBufferSize);
+				recordReplayIndex++;
+				replayAvailable = true;
+				if (recordReplayIndex >= ReplayLength - 1) {
+					recording = false;
+					recordedLength = recordReplayIndex - 1;
+				}
+			}
+			if (replaying) {
+				printf("replaying %d\n", recordReplayIndex);
+				memcpy((uint8_t*)inputRef, &replayBuffer[recordReplayIndex], ReplayBufferSize);
+				memcpy((uint8_t*)inputRef + 0x2c0, &replayBuffer2[recordReplayIndex], ReplayBufferSize);
+				recordReplayIndex++;
+				if (recordReplayIndex >= recordedLength) {
+					replaying = false;
+				}
+			}
+		}
+		break;
+	}
+
+	//Original Code here.
+	/*
+	((void (*)(longlong))_addr(0x1402b41b0))(param_1);
+	if (inputRefSet) {
+		if (recording) {
+			printf("recording %d\n", recordReplayIndex);
+			memcpy(&replayBuffer[recordReplayIndex], (uint8_t*)inputRef, ReplayBufferSize);
+			memcpy(&replayBuffer2[recordReplayIndex], (uint8_t*)inputRef + 0x2c0, ReplayBufferSize);
+			recordReplayIndex++;
+			replayAvailable = true;
+			if (recordReplayIndex >= ReplayLength - 1) {
+				recording = false;
+				recordedLength = recordReplayIndex - 1;
+			}
+		}
+		if (replaying) {
+			printf("replaying %d\n", recordReplayIndex);
+			memcpy((uint8_t*)inputRef, &replayBuffer[recordReplayIndex], ReplayBufferSize);
+			memcpy((uint8_t*)inputRef + 0x2c0, &replayBuffer2[recordReplayIndex], ReplayBufferSize);
+			recordReplayIndex++;
+			if (recordReplayIndex >= recordedLength) {
+				replaying = false;
+			}
+		}
+	}
+	*/
+
+}
+
 void UMVC3Menu::Draw()
 {
 	if (!m_bIsActive)
 		return;
 
+	Trampoline* tramp = Trampoline::MakeTrampoline(GetModuleHandle(nullptr));
+	InjectHook(_addr(0x140289c5a), tramp->Jump(FUN_1402b41b0), PATCH_CALL);
 	auto block2 = *(uintptr_t*)_addr(0x140d47e68);
 	auto val = *(unsigned char*)(block2 + 0x118);
 	if (val != 0)
@@ -1389,12 +1649,11 @@ void UMVC3Menu::Draw()
 
 	ImGui::GetIO().MouseDrawCursor = true;
 
-	ImGui::Begin("UMVC3Hook by ermaccer", &m_bIsActive, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoNav);
+	ImGui::Begin("UMVC3 Training Tools Mod V0.3 by Eternal Yoshi", &m_bIsActive, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoNav);
 	//ImGui::BeginChild("##scrolling", ImVec2(0, -ImGui::GetFrameHeightWithSpacing()));
 
-
 	//Start of my port of the Training Mode Tools mod I made in Spring. Still more to do.
-	ImGui::Text("Training Tools");
+	ImGui::Text("Toggle this with F1");
 	ImGui::Separator();
 	if (ImGui::BeginTabBar("##tabs"))
 	{
@@ -1593,7 +1852,7 @@ void UMVC3Menu::Draw()
 
 			ImGui::Separator();
 
-			ImGui::Text("V0.2 By Eternal Yoshi & HkHaan96");
+			ImGui::Text("V0.3 By Eternal Yoshi & HkHaan96 and Ermaccer for the original hook");
 
 			ImGui::EndTabItem();
 
@@ -1694,7 +1953,7 @@ void UMVC3Menu::Draw()
 
 			ImGui::Separator();
 
-			ImGui::Text("V0.2 By Eternal Yoshi, thanks to HkHaan96 for help");
+			ImGui::Text("V0.2 By Eternal Yoshi, thanks to HkHaan96 for help and Ermaccer for the original hook");
 
 			ImGui::EndTabItem();
 
@@ -1931,7 +2190,289 @@ void UMVC3Menu::Draw()
 
 			ImGui::Separator();
 
-			ImGui::Text("V0.2 By Eternal Yoshi, thanks to HkHaan96 for help");
+			ImGui::Text("V0.3 By Eternal Yoshi, thanks to HkHaan96 for help and Ermaccer for the original hook");
+
+			ImGui::EndTabItem();
+
+		}
+
+		//For Recording And Playback Stuff.
+		if (ImGui::BeginTabItem("Record & Playback"))
+		{
+
+			ImGui::Text("Remember! These Parameters will only take\neffect when this window is open.");
+
+
+			switch (RecordingSlot)
+			{
+
+			case 2:
+
+				if (!recording) {
+					if (ImGui::Button("Record")) {
+						if (CheckTheMode() == true)
+						{
+							recording = true;
+							replaying = false;
+							recordReplayIndex2 = 0;
+						}
+					}
+				}
+				else if (recordReplayIndex2 > 90) {
+					if (ImGui::Button("Stop Recording")) {
+						if (CheckTheMode() == true)
+						{
+							recording = false;
+							recordedLength2 = recordReplayIndex2 - 1;
+						}
+					}
+				}
+				ImGui::SameLine();					
+				ImGui::Text("Time: " + recordedLength2);
+
+				if (replayAvailable2 && !recording) {
+					if (!replaying) {
+						if (ImGui::Button("Playback")) {
+							if (CheckTheMode() == true)
+							{
+								replaying = true;
+								recordReplayIndex2 = 0;
+							}
+
+						}
+					}
+					else if (recordReplayIndex2 > 90) {
+						if (ImGui::Button("Stop Playback"))
+						{
+							if (CheckTheMode() == true)
+							{
+								replaying = false;
+							}
+						}
+					}
+				}
+
+
+				break;
+
+			case 3:
+
+				if (!recording) {
+					if (ImGui::Button("Record")) {
+						if (CheckTheMode() == true)
+						{
+							recording = true;
+							replaying = false;
+							recordReplayIndex3 = 0;
+						}
+					}
+				}
+				else if (recordReplayIndex3 > 90) {
+					if (ImGui::Button("Stop Recording")) {
+						if (CheckTheMode() == true)
+						{
+							recording = false;
+							recordedLength3 = recordReplayIndex3 - 1;
+						}
+					}
+				}
+				ImGui::SameLine();
+				ImGui::Text("Time: " + recordedLength3);
+
+				if (replayAvailable3 && !recording) {
+					if (!replaying) {
+						if (ImGui::Button("Playback")) {
+							if (CheckTheMode() == true)
+							{
+								replaying = true;
+								recordReplayIndex3 = 0;
+							}
+
+						}
+					}
+					else if (recordReplayIndex3 > 90) {
+						if (ImGui::Button("Stop Playback"))
+						{
+							if (CheckTheMode() == true)
+							{
+								replaying = false;
+							}
+						}
+					}
+				}
+
+
+				break;
+
+			case 4:
+
+				if (!recording) {
+					if (ImGui::Button("Record")) {
+						if (CheckTheMode() == true)
+						{
+							recording = true;
+							replaying = false;
+							recordReplayIndex4 = 0;
+						}
+					}
+				}
+				else if (recordReplayIndex4 > 90) {
+					if (ImGui::Button("Stop Recording")) {
+						if (CheckTheMode() == true)
+						{
+							recording = false;
+							recordedLength4 = recordReplayIndex4 - 1;
+						}
+					}
+				}
+				ImGui::SameLine();
+				ImGui::Text("Time: " + recordedLength4);
+
+				if (replayAvailable4 && !recording) {
+					if (!replaying) {
+						if (ImGui::Button("Playback")) {
+							if (CheckTheMode() == true)
+							{
+								replaying = true;
+								recordReplayIndex4 = 0;
+							}
+
+						}
+					}
+					else if (recordReplayIndex4 > 90) {
+						if (ImGui::Button("Stop Playback"))
+						{
+							if (CheckTheMode() == true)
+							{
+								replaying = false;
+							}
+						}
+					}
+				}
+
+
+				break;
+
+			case 5:
+				if (!recording) {
+					if (ImGui::Button("Record")) {
+						if (CheckTheMode() == true)
+						{
+							recording = true;
+							replaying = false;
+							recordReplayIndex5 = 0;
+						}
+					}
+				}
+				else if (recordReplayIndex5 > 90) {
+					if (ImGui::Button("Stop Recording")) {
+						if (CheckTheMode() == true)
+						{
+							recording = false;
+							recordedLength5 = recordReplayIndex5 - 1;
+						}
+					}
+				}
+				ImGui::SameLine();
+				ImGui::Text("Time: " + recordedLength5);
+
+				if (replayAvailable5 && !recording) {
+					if (!replaying) {
+						if (ImGui::Button("Playback")) {
+							if (CheckTheMode() == true)
+							{
+								replaying = true;
+								recordReplayIndex5 = 0;
+							}
+
+						}
+					}
+					else if (recordReplayIndex5 > 90) {
+						if (ImGui::Button("Stop Playback"))
+						{
+							if (CheckTheMode() == true)
+							{
+								replaying = false;
+							}
+						}
+					}
+				}
+
+
+				break;
+
+			case 1:
+			default:
+
+				if (!recording) {
+					if (ImGui::Button("Record")) {
+						if (CheckTheMode() == true)
+						{
+							recording = true;
+							replaying = false;
+							recordReplayIndex = 0;
+						}
+					}
+				}
+				else if (recordReplayIndex > 90) {
+					if (ImGui::Button("Stop Recording")) {
+						if (CheckTheMode() == true)
+						{
+							recording = false;
+							recordedLength = recordReplayIndex - 1;
+						}
+					}
+				}
+				ImGui::SameLine();
+				ImGui::Text("Time: " + recordedLength);
+
+				if (replayAvailable && !recording) {
+					if (!replaying) {
+						if (ImGui::Button("Playback")) {
+							if (CheckTheMode() == true)
+							{
+								replaying = true;
+								recordReplayIndex = 0;
+							}
+
+						}
+					}
+					else if (recordReplayIndex > 90) {
+						if (ImGui::Button("Stop Playback"))
+						{
+							if (CheckTheMode() == true)
+							{
+								replaying = false;
+							}
+						}
+					}
+				}
+
+				break;
+			}
+
+
+
+
+
+			if (RecordingSlot)
+			{
+				ImGui::Text("Recording Slot");
+				if (ImGui::SliderInt("Slot", &RecordingSlot, 1, 5))
+				{
+					if (CheckTheMode() == true)
+					{
+
+					}
+				}
+			}
+
+			//auto sigger = sigscan::get();
+
+
+			ImGui::Separator();
+
+			ImGui::Text("V0.3 By Eternal Yoshi, thanks to HkHaan96 for help and Ermaccer for the original hook");
 
 			ImGui::EndTabItem();
 
@@ -2315,3 +2856,114 @@ void UMVC3Menu::KeyBind(int* var, char* bindName, char* name)
 	ImGui::LabelText("##", bindName);
 	DrawKeyBind(name, var);
 }
+
+
+
+//TODO put this in a better spot.
+/*
+#include <d3d9types.h>
+bool UMVC3Menu::startedHitbox() {
+	return startedHitboxViewer;
+}
+int UMVC3Menu::getFighterIndex(uintptr_t ptr) {
+	for (size_t i = 0; i < 6; i++)
+	{
+		if ((uintptr_t)scriptableFighters[i].fighter == ptr) return i;
+	}
+	return 0;
+}
+int UMVC3Menu::getHBoxCount(int fighterIndex) {
+	if (!pAddrSet || scriptableFighters[fighterIndex].fighter == NULL)
+		return 0;
+	auto t = *((uintptr_t*)(((uint8_t*)scriptableFighters[fighterIndex].fighter) + 0x4E10));
+	auto tt = (uintptr_t*)(*(uintptr_t*)(((uint8_t*)t) + 0x30));
+	for (size_t i = 0; i < 100; i++)
+	{
+		if (*tt == 0) {
+			return i;
+		}
+		tt++;
+	}
+	return 26;
+}
+HBoxInfo UMVC3Menu::getHBoxPos(int index, int fighterIndex)
+{
+	if (!pAddrSet || scriptableFighters[fighterIndex].fighter == NULL)
+		return HBoxInfo(0, 0, 0.0f, D3DCOLOR_RGBA(0, 250, 0, 100), 60, 0);
+	auto t = *((uintptr_t*)(((uint8_t*)scriptableFighters[fighterIndex].fighter) + 0x4E10));
+	auto tt = (uint8_t*)*(uintptr_t*)(((uint8_t*)t) + 0x30);
+	tt += index * 8;
+	tt = (uint8_t*)(*(uintptr_t*)tt);
+	auto valx = tt + 0x30;
+	auto posx = *((float*)valx);
+	auto valy = tt + 0x34;
+	auto posy = *((float*)valy);
+	//auto r = screenPosition(glm::vec3(posx, posy, 70.0f));
+	return HBoxInfo(r.x, r.y, 0.0f, D3DCOLOR_RGBA(0, 250, 0, 70, 60, 0), 30, 1);
+}
+
+int UMVC3Menu::getHitboxCount() {
+	//return hitboxes.size();
+	return NULL;
+}
+HBoxInfo UMVC3Menu::getHitBoxPos(int index)
+{
+	auto valx = ((uint8_t*)hitboxes[index]) + 0x20;
+	auto posx = *((float*)valx);
+	auto valy = ((uint8_t*)hitboxes[index]) + 0x24;
+	auto posy = *((float*)valy);
+	auto valen = ((uint8_t*)hitboxes[index]) + 0x30 + 0x20;
+	auto en = *((int*)valen);
+	auto valsz = ((uint8_t*)hitboxes[index]) + 0x20 + 0x20;
+	float size = *((float*)valsz);
+	/*if(index==0)
+		printf("%llx - %f\n",valx,posy);*/
+		//ImDrawList* draw_list = ImGui::GetWindowDrawList();
+/*
+	auto r = screenPosition(glm::vec3(posx, posy, 70.0f));
+	if (posx != 0) {
+		printf("pttrtrtrt:%f - %llx %llx\n", posx, valx, valen);
+	}
+	return HBoxInfo(r.x, r.y, 0.0f, D3DCOLOR_RGBA(250, 0, 0, 100), size, en);
+}
+
+
+
+int64 cameraptr = 0;
+float posXMultiplier = 1.15;
+float posYMultiplier = 1.37;
+#include "../glm/vec4.hpp"
+#include "../glm/vec3.hpp"
+#include "../glm/glm.hpp"
+#include "../glm/gtc/matrix_transform.hpp"
+float UMVC3Menu::getXMultiplier() { return posXMultiplier; }
+float* UMVC3Menu::getXMultiplierPtr() { return &posXMultiplier; }
+void UMVC3Menu::setXMultiplier(float val) { posXMultiplier = val; }
+float UMVC3Menu::getYMultiplier() { return posYMultiplier; }
+float* UMVC3Menu::getYMultiplierPtr() { return &posYMultiplier; }
+void UMVC3Menu::setYMultiplier(float val) { posYMultiplier = val; }
+void UMVC3Menu::setCameraPtr(uintptr_t camptr) {
+	cameraptr = camptr;
+}
+glm::highp_mat4 getProjection() {
+
+	auto res = glm::perspective<float>(*(float*)(cameraptr + 0x4C), 1600.0f / 900.0f, 0.01f, 100.0f);
+	return res;
+}
+glm::vec4 getView() {
+	return glm::vec4(0, 0, 1600, 900 * UMVC3Menu::getYMultiplier());
+}
+glm::vec2 UMVC3Menu::screenPosition(glm::vec3& _coord) {
+	float posx = *(float*)(cameraptr + 0x50);
+	float posy = *(float*)(cameraptr + 0x54);
+	float posz = *(float*)(cameraptr + 0x58);
+	float posx2 = *(float*)(cameraptr + 0x70);
+	float posy2 = *(float*)(cameraptr + 0x74);
+	float posz2 = *(float*)(cameraptr + 0x78);
+
+	_coord.z = posz;
+	int multi = 0.5f;
+	glm::mat4 viewMatrix = glm::lookAt(glm::vec3(posx, posy, posz2), glm::vec3(posx2, posy2, posz), glm::vec3(0, 1, 0));
+	return glm::project(_coord, viewMatrix, getProjection(), getView());
+}
+*/

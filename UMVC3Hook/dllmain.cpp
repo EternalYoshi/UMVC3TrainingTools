@@ -7,6 +7,7 @@
 #include "gui/notifications.h"
 
 #include "plugin/Menu.h"
+
 #include "plugin/Settings.h"
 #include "plugin/Hooks.h"
 

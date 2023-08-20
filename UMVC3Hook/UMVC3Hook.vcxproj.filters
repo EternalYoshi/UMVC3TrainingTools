@@ -34,6 +34,12 @@
     <Filter Include="Header Files\helper">
       <UniqueIdentifier>{fd541d81-a23a-42d6-b4e3-36284ad3d942}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\hitbox">
+      <UniqueIdentifier>{d3190e29-00b4-4bc7-8b18-edaa73e76e33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\code">
+      <UniqueIdentifier>{d91d7f08-de55-42dc-a875-f61a31ac9ba3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -145,6 +151,9 @@
       <Filter>Header Files\gui</Filter>
     </ClInclude>
     <ClInclude Include="resource1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sigscan.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

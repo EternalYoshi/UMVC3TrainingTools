@@ -4,29 +4,15 @@
 #include "../helper/eKeyboardMan.h"
 #include "../utils.h"
 #include "../gui/gui_impl_dx9.h"
-
 #include <DirectXMath.h>
 using namespace DirectX;
 
 #define UMVC3HOOK_VERSION "0.2"
 
-#define longlong  long long
-#define ulonglong  unsigned long long
-#define undefined8  long long*
-#define undefined7  long long
-#define undefined2  int
 
-typedef int (*code)(longlong* param_1);
-typedef int (*codenoarg)();
-typedef void (*method)(void);
-#define undefined int
-#define undefined4 int
-#define CONCAT71(a,b) (a<<32 | b)
-#define backupsize 10000//100000
-#define prebackup 0 //100000
 
-constexpr int backupSize = 1000;
-constexpr int teamBackupSize = 0x960;
+
+
 /*
 int runaheadcount = 0;
 bool pAddrSet = false;
@@ -773,10 +759,30 @@ void SetIndividualCharacterHealth()
 }
 */
 
+struct vector {
+	float X;
+	float Y;
+	float Z;
+};
 
 enum EMenuSubMenus {
 	SM_Settings,
 	SM_Total
+};
+
+struct HBoxInfo {
+	vector pos;
+	unsigned long color;
+	bool enabled;
+	float size;
+	HBoxInfo(float x, float y, float z, unsigned long col, float sz, bool en) {
+		pos.X = x;
+		pos.Y = y;
+		pos.Z = z;
+		color = col;
+		enabled = en;
+		size = sz;
+	}
 };
 
 class UMVC3Menu {
@@ -826,7 +832,26 @@ public:
 
 	void	 DrawKeyBind(char* name, int* var);
 	void	 KeyBind(int* var, char* bindName, char* name);
+
+	//TODO put these in better place
+	static vector getP1Pos();
+	static bool startedHitbox();
+	static int getHBoxCount(int fighterIndex);
+	static int getFighterIndex(uintptr_t ptr);
+	static HBoxInfo getHBoxPos(int index, int fighterIndex);
+	static HBoxInfo getHitBoxPos(int index);
+	static int getHitboxCount();
+	//static glm::vec2 screenPosition(glm::vec3& _coord);
+	static float getXMultiplier();
+	static float* getXMultiplierPtr();
+	static void setXMultiplier(float val);
+	static float getYMultiplier();
+	static float* getYMultiplierPtr();
+	static void setYMultiplier(float val);
+	static void setCameraPtr(uintptr_t camptr);
+
 };
 
 
 extern UMVC3Menu* TheMenu;
+
