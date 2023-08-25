@@ -6,6 +6,7 @@
 #include "../gui/imgui/imgui.h"
 #include "../umvc3/Camera.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <commdlg.h>
 #include <iostream>
 #include <fstream>
@@ -3095,7 +3096,7 @@ void UMVC3Menu::Draw()
 						if (ImGui::Button("Playback Both")) {
 							if (CheckTheMode() == true)
 							{
-								
+
 								replayingP1 = true;
 								replayingP2 = true;
 								recordReplayIndex = 0;
@@ -3238,7 +3239,7 @@ void UMVC3Menu::Draw()
 							ofn.lpstrFilter = ofn.lpstrDefExt = szExt;
 							ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
 
-							if(GetOpenFileName(&ofn))
+							if (GetOpenFileName(&ofn))
 							{
 								if (ofn.lStructSize > ReplayBufferSize)
 								{
@@ -3247,18 +3248,38 @@ void UMVC3Menu::Draw()
 								}
 								else
 								{
-									std::ifstream myfile(ofn.lpstrFile, std::ios::binary | std::ios::ate);
+									//MessageBoxA(0,ofn.lpstrFile,0,MB_ICONINFORMATION);
+									std::ifstream mRP(ofn.lpstrFile, std::ios::binary | std::ios::ate);
+									mRP.unsetf(std::ios::skipws);
+									std::ifstream::pos_type pos = mRP.tellg();
 
-									std::ifstream::pos_type pos = myfile.tellg();
-
-									int length = pos/550;
-
-									char* pChars = new char[length];
-									myfile.seekg(0, std::ios::beg);
-									myfile.read(pChars, length);
-									memcpy(replayBuffer, pChars, length);
+									//Gets the file size, sets the needed variables to play the replay when loaded, 
+									//and then copies the file into an array in memory.
+									int filesize = pos;
+									int length = pos / 550;									
 									replayAvailableP1 = true;
 									recordedLengthP1 = length;
+									recordReplayIndexP1 = 0;
+
+									mRP.seekg(0, std::ios::beg);
+
+									std::vector<BYTE> pChars;
+									pChars.reserve(filesize);
+
+									pChars.insert(pChars.begin(),
+										std::istream_iterator<BYTE>(mRP),
+										std::istream_iterator<BYTE>());
+									
+									//For loop for inserting the frames in the proper place. Based on code from recording.
+									//Need to fix this.
+									for (int i = 0; i < recordedLengthP1; i++)
+									{
+
+										memcpy(&replayBuffer[i], &pChars[(i*550)], ReplayBufferSize);
+									}
+									
+									//memcpy(&replayBuffer3[recordReplayIndex2], (uint8_t*)inputRef, ReplayBufferSize);
+
 
 								}
 
@@ -3275,6 +3296,41 @@ void UMVC3Menu::Draw()
 					{
 						if (!recordingP1 && !recordingP2)
 						{
+
+							OPENFILENAME ofn = { sizeof(OPENFILENAME) };
+							char szFile[_MAX_PATH] = "RecP2";
+							const char szExt[] = ".dat\0"; // extra '\0' for lpstrFilter
+							ofn.hwndOwner = GetConsoleWindow();
+							ofn.lpstrFile = szFile; // <--------------------- initial file name
+							ofn.nMaxFile = sizeof(szFile) / sizeof(szFile[0]);
+							ofn.lpstrFilter = ofn.lpstrDefExt = szExt;
+							ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
+
+							if (GetOpenFileName(&ofn))
+							{
+								if (ofn.lStructSize > ReplayBufferSize)
+								{
+									MessageBoxA(0, "This file is too big to load.\nThe opened file size is: " + ofn.lStructSize, 0, MB_ICONINFORMATION);
+
+								}
+								else
+								{
+									std::ifstream myfile(ofn.lpstrFile, std::ios::binary | std::ios::ate);
+
+									std::ifstream::pos_type pos = myfile.tellg();
+
+									int length = pos / 550;
+
+									char* pChars = new char[length];
+									myfile.seekg(0, std::ios::beg);
+									myfile.read(pChars, length);
+									memcpy(replayBuffer2, pChars, length);
+									replayAvailableP2 = true;
+									recordedLengthP2 = length;
+
+								}
+
+							}
 
 
 						}
